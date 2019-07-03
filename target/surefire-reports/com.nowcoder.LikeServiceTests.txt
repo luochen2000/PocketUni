@@ -1,0 +1,12 @@
+-------------------------------------------------------------------------------
+Test set: com.nowcoder.LikeServiceTests
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 6.013 sec <<< FAILURE! - in com.nowcoder.LikeServiceTests
+testLike(com.nowcoder.LikeServiceTests)  Time elapsed: 5.991 sec  <<< FAILURE!
+java.lang.AssertionError: expected:<1> but was:<0>
+	at org.junit.Assert.fail(Assert.java:88)
+	at org.junit.Assert.failNotEquals(Assert.java:834)
+	at org.junit.Assert.assertEquals(Assert.java:645)
+	at org.junit.Assert.assertEquals(Assert.java:631)
+	at com.nowcoder.LikeServiceTests.testLike(LikeServiceTests.java:22)
+

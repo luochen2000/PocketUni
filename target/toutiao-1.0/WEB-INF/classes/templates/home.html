@@ -1,0 +1,214 @@
+#parse("header.html")
+
+<div id="main">
+
+    <div class="container" id="daily">
+        <div class="jscroll-inner">
+
+
+        </div>
+    </div>
+</div>
+
+</div>
+#if ($pop)
+<script>
+    window.loginpop = $!{pop};
+    var offset = 0;
+    var limit = 10;
+    var cur_date = "";
+    var lastDate = "";
+    ajax();
+
+    function ajax() {
+        $.ajax("http://47.102.136.175:8080" + "/api", {
+            data: {
+                offset: offset,
+                limit: limit
+            },
+            type: "post",
+            success: function (data) {  // data:服务端返回的数据
+                var h = "";
+                var str1 = "";
+                var str2 = "";
+                var str3 = "";
+                var str4 = "";
+                var str5 = "";
+                var str = "";
+                var strAll = "";
+                for (var i = 0; i < data.vos.length; i++) {
+                    var objs = data.vos[i].objs;
+                    if (objs.news.createdDate != cur_date) {
+                        cur_date = objs.news.createdDate;
+                        strAll = strAll + str;
+                        h = `<h3 class="date">
+                            <i class="fa icon-calendar"></i>
+                            <span>头条资讯 &nbsp; ${objs.news.createdDate}</span>
+                        </h3>`;
+                        str = h;
+                        lastDate = objs.news.createdDate;
+                    }
+                    str1 = `<div class="posts">
+                    <div class="post">
+                        <div class="votebar">`;
+
+
+                    if (objs.like > 0) {
+                        str2 = `<button class="click-like up pressed" data-id="${objs.news.id}" title="赞同"><i class="vote-arrow"></i><span class="count">${objs.news.likeCount}</span></button>`;
+                    } else {
+                        str2 = `<button class="click-like up" data-id="${objs.news.id}" title="赞同"><i class="vote-arrow"></i><span class="count">${objs.news.likeCount}</span></button>`;
+                    }
+                    if (objs.like < 0) {
+                        str3 = `<button class="click-dislike down pressed" data-id="${objs.news.id}" title="反对"><i class="vote-arrow"></i></button>`;
+                    } else {
+                        str3 = `<button class="click-dislike down" data-id="${objs.news.id}" title="反对"><i class="vote-arrow"></i></button>`;
+                    }
+
+                    str4 = `</div>`;
+                    str5 = `<div class="content">
+                                <div>
+                                    <img class="content-img" src="${objs.news.image}" alt="">
+                                </div>
+                                <div class="content-main">
+                                    <h3 class="title">
+                                        <a target="_blank" rel="external nofollow" href="/news/${objs.news.id}">${objs.news.title}</a>
+                                    </h3>
+                                    <div class="meta">
+                                        <span id="content${objs.news.id}">${objs.news.link}</span>
+                                        <span>
+                                            <i class="fa icon-comment"></i> ${objs.news.commentCount}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="user-info">
+                                <div class="user-avatar">
+                                    <a href="/user/${objs.user.id}/"><img width="32" class="img-circle" src="${objs.user.headUrl}"></a>
+                                </div>
+                            </div>
+                            <div class="subject-name">来自 <a href="/user/${objs.user.id}/">${objs.user.name}</a></div>
+                        </div>
+                </div>`;
+                    str += str1 + str2 + str3 + str4 + str5;
+                }
+                strAll = strAll + str;
+                $(".jscroll-inner")[0].innerHTML = '<div class="daily" id ="vessel">' + strAll.trim() + '</div>';
+                for (var i = 15 + data.vos.length; i >= 0; i--) {
+                    $("#content" + i).text($("#content" + i).text().substring(0, 60) + "......");
+                }
+                load();
+            },
+            error: function (xhr, type, errorThrown) {
+                console.log(type);
+                console.log(errorThrown);
+            }
+        });
+    }
+
+    function load() {
+        layui.use('flow', function () {
+            var flow = layui.flow;
+
+            flow.load({
+                elem: '#vessel', //流加载容器
+                end: '<p class="text-center">我是有底线的</p>',
+                done: function (page, next) { //执行下一页的回调
+//模拟数据插入
+//每次滑动到了底部度会执行这个函数
+                    $(".layui-flow-more")[0].innerHTML = '<p class="text-center"><img width="100px" height="80px" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1558588662276&di=db54dc4ce3ed64fa8827e7bebdd01666&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170720%2Fcd59c28a4c6d49bc8b4ecfcdffbc04f1_th.png" /></p>';
+                    setTimeout(function () {
+                        offset = offset + limit;
+                        $.ajax("http://47.102.136.175:8080" + "/api", {
+                            data: {
+                                offset: offset,
+                                limit: limit
+                            },
+                            type: "post",
+                            success: function (data) {  // data:服务端返回的数据
+                                var h = "";
+                                var str1 = "";
+                                var str2 = "";
+                                var str3 = "";
+                                var str4 = "";
+                                var str5 = "";
+                                var str = "";
+                                var strAll = "";
+                                for (var i = 0; i < data.vos.length; i++) {
+                                    var objs = data.vos[i].objs;
+                                    if (objs.news.createdDate != lastDate) {
+                                        cur_date = objs.news.createdDate;
+                                        strAll = strAll + str;
+                                        h = `<h3 class="date">
+                                                <i class="fa icon-calendar"></i>
+                                                <span>头条资讯 &nbsp; ${objs.news.createdDate}</span>
+                                            </h3>`;
+                                        str = h;
+                                        lastDate = objs.news.createdDate;
+                                    }
+                                    str1 = `<div class="posts">
+                                                <div class="post">
+                                                    <div class="votebar">`;
+
+
+                                    if (objs.like > 0) {
+                                        str2 = `<button class="click-like up pressed" data-id="${objs.news.id}" title="赞同"><i class="vote-arrow"></i><span class="count">${objs.news.likeCount}</span></button>`;
+                                    } else {
+                                        str2 = `<button class="click-like up" data-id="${objs.news.id}" title="赞同"><i class="vote-arrow"></i><span class="count">${objs.news.likeCount}</span></button>`;
+                                    }
+                                    if (objs.like < 0) {
+                                        str3 = `<button class="click-dislike down pressed" data-id="${objs.news.id}" title="反对"><i class="vote-arrow"></i></button>`;
+                                    } else {
+                                        str3 = `<button class="click-dislike down" data-id="${objs.news.id}" title="反对"><i class="vote-arrow"></i></button>`;
+                                    }
+
+                                    str4 = `</div>`;
+                                    str5 = `<div class="content">
+                                                <div>
+                                                    <img class="content-img" src="${objs.news.image}" alt="">
+                                                </div>
+                                                <div class="content-main">
+                                                    <h3 class="title">
+                                                        <a target="_blank" rel="external nofollow" href="/news/${objs.news.id}">${objs.news.title}</a>
+                                                    </h3>
+                                                    <div class="meta">
+                                                        <span id="content${objs.news.id}">${objs.news.link}</span>
+                                                        <span>
+                                                            <i class="fa icon-comment"></i> ${objs.news.commentCount}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="user-info">
+                                                <div class="user-avatar">
+                                                    <a href="/user/${objs.user.id}/"><img width="32" class="img-circle" src="${objs.user.headUrl}"></a>
+                                                </div>
+                                            </div>
+                                        <div class="subject-name">来自 <a href="/user/${objs.user.id}/">${objs.user.name}</a></div>
+                                    </div>
+                                </div>`;
+                                    str += str1 + str2 + str3 + str4 + str5;
+                                }
+                                strAll = strAll + str;
+//执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+//pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                                next(strAll.trim(), data.vos.length == 10); //假设总页数为 10
+//最后这个数字，是表示每次加载所用的时间。
+                                for (var i = 15 + data.vos.length; i >= 0; i--) {
+                                    $("#content" + i).text($("#content" + i).text().substring(0, 60) + "......");
+                                }
+                            },
+                            error: function (xhr, type, errorThrown) {
+                                console.log(type);
+                                console.log(errorThrown);
+                            }
+                        });
+                    }, 1000);
+                }
+            });
+        });
+    }
+</script>
+<script type="text/javascript" src="scripts/main/site/home.js"></script>
+#end
+
+#parse("footer.html")

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    <settings>
+        <!-- 打开cache同时筛选东西会更快-->
+        <setting name="cacheEnabled" value="true"/>
+        <!-- 超时时间设置-->
+        <setting name="defaultStatementTimeout" value="3000"/>
+        <!--驼峰命名打开-->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+
+        <setting name="useGeneratedKeys" value="true"/>
+    </settings>
+
+
+</configuration>
